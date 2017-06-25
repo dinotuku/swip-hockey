@@ -1,15 +1,15 @@
 Swip Hockey
 =========
 
-#### Setup
+#### Setup  
 
-  yarn global add webpack
-  yarn install
-  cd games/hockey
-  yarn install
-  cd ../..
-  yarn run build
+	yarn global add webpack
+	yarn install
+	cd games/hockey
+	yarn install
+	cd ../..
+	yarn run build
 
-#### Run server
+#### Run server  
 
-  yarn run hockey
+	yarn run hockey
