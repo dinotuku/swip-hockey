@@ -11,29 +11,31 @@
 
     var counter = 0;
     var blobs = [];
-    var activeBlobs = [];
-    var clickedBlobs = [];
-    var disToBlob = [];
+    var strikers = [];
+    var activeStrikers = [];
+    var clickedStrikers = [];
+    var disToStriker = [];
+    let bool = false;
 
     client.onDragStart(function (evt) {
       evt.position.forEach(function (pos) {
-        for (var i = 0; i < blobs.length; i++) {
-          if (touchInRadius(pos.x, pos.y, blobs[i].x, blobs[i].y, blobs[i].size * 1.2)) {
-            clickedBlobs.push(blobs.splice(i, 1)[0]);
-            disToBlob.push({
-              x: pos.x - clickedBlobs[clickedBlobs.length - 1].x,
-              y: pos.y - clickedBlobs[clickedBlobs.length - 1].y,
+        for (var i = 0; i < strikers.length; i++) {
+          if (touchInRadius(pos.x, pos.y, strikers[i].x, strikers[i].y, strikers[i].size * 1.2)) {
+            clickedStrikers.push(strikers.splice(i, 1)[0]);
+            disToStriker.push({
+              x: pos.x - clickedStrikers[clickedStrikers.length - 1].x,
+              y: pos.y - clickedStrikers[clickedStrikers.length - 1].y,
             });
           }
         }
       });
-      if (clickedBlobs.length > 0) {
+      if (clickedStrikers.length > 0) {
         client.emit('updateBlobs', { blobs: blobs });
       }
 
-      if (clickedBlobs == false && blobs.length <= 1) {
+      if (clickedStrikers == false && blobs.length < 2) {
         evt.position.forEach(function (pos) {
-          activeBlobs.push({
+          activeStrikers.push({
             x: pos.x,
             y: pos.y,
             speedX: 0,
@@ -45,19 +47,19 @@
     });
 
     client.onDragMove(function (evt) {
-      if (clickedBlobs.length > 0) {
+      if (clickedStrikers.length > 0) {
         if (counter >= 3) {
           evt.position.forEach(function (pos) {
-            for (var i = 0; i < clickedBlobs.length; i++) {
-              if (touchInRadius(pos.x, pos.y, clickedBlobs[i].x, clickedBlobs[i].y, clickedBlobs[i].size * 10)) {
-                clickedBlobs[i].x = pos.x - disToBlob[i].x;
-                clickedBlobs[i].y = pos.y - disToBlob[i].y;
-                // clickedBlobs[i].x = pos.x;
-                // clickedBlobs[i].y = pos.y;
+            for (var i = 0; i < clickedStrikers.length; i++) {
+              if (touchInRadius(pos.x, pos.y, clickedStrikers[i].x, clickedStrikers[i].y, clickedStrikers[i].size * 10)) {
+                clickedStrikers[i].x = pos.x - disToStriker[i].x;
+                clickedStrikers[i].y = pos.y - disToStriker[i].y;
               }
-              if (touchInRadius(clickedBlobs[i].x, clickedBlobs[i].y, blobs[0].x, blobs[0].y, blobs[0].size * 2)) {
-                blobs[0].speedX = (blobs[0].x - clickedBlobs[i].x) / 2;
-                blobs[0].speedY = (blobs[0].y - clickedBlobs[i].y) / 2;
+              if (blobs[0]) {
+                if (touchInRadius(pos.x, pos.y, blobs[0].x, blobs[0].y, blobs[0].size * 2)) {
+                  blobs[0].speedX = (blobs[0].x - clickedStrikers[i].x) / 2;
+                  blobs[0].speedY = (blobs[0].y - clickedStrikers[i].y) / 2;
+                }
               }
             }
             client.emit('updateBlobs', { blobs: blobs });
@@ -67,9 +69,9 @@
         counter++;
       } else {
         evt.position.forEach(function (pos) {
-          for (var i = 0; i < activeBlobs.length; i++) {
-           if (touchInRadius(pos.x, pos.y, activeBlobs[i].x, activeBlobs[i].y, activeBlobs[i].size)) {
-            activeBlobs.splice(i, 1);
+          for (var i = 0; i < activeStrikers.length; i++) {
+           if (touchInRadius(pos.x, pos.y, activeStrikers[i].x, activeStrikers[i].y, activeStrikers[i].size)) {
+            activeStrikers.splice(i, 1);
             i--;
            }
           }
@@ -78,49 +80,53 @@
     });
 
     client.onDragEnd(function (evt) {
-      if (clickedBlobs == false) {
+      if (clickedStrikers == false) {
         evt.position.forEach(function (pos) {
           var emitBlobs = [];
-          for (var i = 0; i < activeBlobs.length; i++) {
-            if (touchInRadius(pos.x, pos.y, activeBlobs[i].x, activeBlobs[i].y, activeBlobs[i].size)) {
-              emitBlobs.push(activeBlobs[i]);
-              activeBlobs.splice(i, 1);
+          for (var i = 0; i < activeStrikers.length; i++) {
+            if (touchInRadius(pos.x, pos.y, activeStrikers[i].x, activeStrikers[i].y, activeStrikers[i].size)) {
+              emitBlobs.push(activeStrikers[i]);
+              activeStrikers.splice(i, 1);
               i--;
             }
           }
           if (emitBlobs.length) {
-            client.emit('addBlobs', { blobs: emitBlobs });
+            // client.emit('addBlobs', { blobs: emitBlobs });
+            strikers = emitBlobs;
           }
-        });
-      } else {
-        evt.position.forEach(function (pos) {
-          var emitBlobs = [];
-          for (var i = 0; i < clickedBlobs.length; i++) {
-            var startX = clickedBlobs[i].x;
-            var startY = clickedBlobs[i].y;
-
-            if (touchInRadius(pos.x, pos.y, clickedBlobs[i].x, clickedBlobs[i].y, clickedBlobs[i].size * 40)) {
-              clickedBlobs[i].x = pos.x - disToBlob[i].x;
-              clickedBlobs[i].y = pos.y - disToBlob[i].y;
-              // clickedBlobs[i].x = pos.x;
-              // clickedBlobs[i].y = pos.y;
-              clickedBlobs[i].speedX = (clickedBlobs[i].x  - startX) / 2;
-              clickedBlobs[i].speedY = (clickedBlobs[i].y - startY) / 2;
-              // clickedBlobs[i].speedX = (pos.x  - startX) / 2;
-              // clickedBlobs[i].speedY = (pos.y - startY) / 2;
-              emitBlobs.push(clickedBlobs.splice(i, 1)[0]);
-              disToBlob.splice(i, 1);
-              i--;
-            }
-          }
-          client.emit('addBlobs', { blobs: emitBlobs });
         });
       }
+      // else {
+      //   evt.position.forEach(function (pos) {
+      //     var emitBlobs = [];
+      //     for (var i = 0; i < clickedStrikers.length; i++) {
+      //       var startX = clickedStrikers[i].x;
+      //       var startY = clickedStrikers[i].y;
+
+      //       if (touchInRadius(pos.x, pos.y, clickedStrikers[i].x, clickedStrikers[i].y, clickedStrikers[i].size * 40)) {
+      //         clickedStrikers[i].x = pos.x - disToStriker[i].x;
+      //         clickedStrikers[i].y = pos.y - disToStriker[i].y;
+      //         clickedStrikers[i].speedX = (clickedStrikers[i].x  - startX) / 2;
+      //         clickedStrikers[i].speedY = (clickedStrikers[i].y - startY) / 2;
+      //         emitBlobs.push(clickedStrikers.splice(i, 1)[0]);
+      //         disToStriker.splice(i, 1);
+      //         i--;
+      //       }
+      //     }
+      //     client.emit('addBlobs', { blobs: emitBlobs });
+      //   });
+      // }
     });
 
     client.onUpdate(function (evt) {
       var updatedBlobs = evt.cluster.data.blobs;
       blobs = updatedBlobs;
+
+      if (evt.client.transform.x && strikers.length && !bool) {
+        bool = true;
+        strikers[0].x += evt.client.transform.x;
+        strikers[0].y -= evt.client.transform.y;
+      }
 
       ctx.save();
 
@@ -128,8 +134,8 @@
 
       drawBackground(ctx, evt);
       drawOpenings(ctx, evt.client);
-      // increaseActiveBlobSize(activeBlobs, converter);
-      drawBlobs(ctx, activeBlobs, clickedBlobs, updatedBlobs);
+      // increaseActiveBlobSize(activeStrikers, converter);
+      drawBlobs(ctx, strikers, clickedStrikers, updatedBlobs);
 
       ctx.restore();
     });
@@ -149,29 +155,29 @@
     ctx.scale(converter.toDevicePixel(1), converter.toDevicePixel(1));
   }
 
-  function increaseActiveBlobSize (activeBlobs, converter) {
-    if (activeBlobs) {
-      for(var i = 0; i < activeBlobs.length; i++) {
-        if (activeBlobs[i].size < converter.toAbsPixel(100)) {
-          activeBlobs[i].size += 1;
+  function increaseActiveBlobSize (activeStrikers, converter) {
+    if (activeStrikers) {
+      for(var i = 0; i < activeStrikers.length; i++) {
+        if (activeStrikers[i].size < converter.toAbsPixel(100)) {
+          activeStrikers[i].size += 1;
         }
       }
     }
   }
 
-  function drawBlobs (ctx, activeBlobs, clickedBlobs, updatedBlobs) {
+  function drawBlobs (ctx, strikers, clickedStrikers, updatedBlobs) {
     ctx.shadowBlur = 0;
 
     ctx.save();
 
-    activeBlobs.forEach(function(blob) {
+    strikers.forEach(function(blob) {
       ctx.beginPath();
       ctx.arc(blob.x, blob.y, blob.size , 0, 2 * Math.PI, false);
       ctx.fillStyle = '#FFFFFF';
       ctx.fill();
     });
 
-    clickedBlobs.forEach(function(blob) {
+    clickedStrikers.forEach(function(blob) {
       ctx.beginPath();
       ctx.arc(blob.x, blob.y, blob.size , 0, 2 * Math.PI, false);
       ctx.fillStyle = '#FFFFFF';
@@ -199,9 +205,9 @@
     return inRadius;
   }
 
-  function indexInClicked (index, clickedBlobs) {
-    for (var i = 0; i < clickedBlobs.length; i++) {
-      if (clickedBlobs[i].index == index) {
+  function indexInClicked (index, clickedStrikers) {
+    for (var i = 0; i < clickedStrikers.length; i++) {
+      if (clickedStrikers[i].index == index) {
         return true;
       }
     }
@@ -226,6 +232,14 @@
       ctx.moveTo(transformX, wall.start + transformY);
       ctx.lineTo(transformX, wall.end + transformY);
       ctx.stroke();
+
+      let goalCenter = (wall.start + wall.end) / 2;
+      ctx.strokeStyle = "#000000";
+      ctx.shadowColor = "#000000";
+      ctx.beginPath();
+      ctx.moveTo(width + transformX, goalCenter - 75 + transformY);
+      ctx.lineTo(width + transformX, goalCenter + 75 + transformY);
+      ctx.stroke();
     });
 
     openings.top.forEach(function (wall) {
@@ -235,6 +249,14 @@
       ctx.beginPath();
       ctx.moveTo(wall.start + transformX, transformY);
       ctx.lineTo(wall.end + transformX, transformY);
+      ctx.stroke();
+
+      let goalCenter = (wall.start + wall.end) / 2;
+      ctx.strokeStyle = "#000000";
+      ctx.shadowColor = "#000000";
+      ctx.beginPath();
+      ctx.moveTo(goalCenter - 75 + transformX, height + transformY);
+      ctx.lineTo(goalCenter + 75 + transformX, height + transformY);
       ctx.stroke();
     });
 
@@ -246,6 +268,14 @@
       ctx.moveTo(width + transformX, wall.start + transformY);
       ctx.lineTo(width + transformX, wall.end + transformY);
       ctx.stroke();
+
+      let goalCenter = (wall.start + wall.end) / 2;
+      ctx.strokeStyle = "#000000";
+      ctx.shadowColor = "#000000";
+      ctx.beginPath();
+      ctx.moveTo(transformX, goalCenter - 75 + transformY);
+      ctx.lineTo(transformX, goalCenter + 75 + transformY);
+      ctx.stroke();
     });
 
     openings.bottom.forEach(function (wall) {
@@ -255,6 +285,14 @@
       ctx.beginPath();
       ctx.moveTo(wall.start + transformX, height + transformY);
       ctx.lineTo(wall.end + transformX, height + transformY);
+      ctx.stroke();
+
+      let goalCenter = (wall.start + wall.end) / 2;
+      ctx.strokeStyle = "#000000";
+      ctx.shadowColor = "#000000";
+      ctx.beginPath();
+      ctx.moveTo(goalCenter - 75 + transformX, transformY);
+      ctx.lineTo(goalCenter + 75 + transformX, transformY);
       ctx.stroke();
     });
   }

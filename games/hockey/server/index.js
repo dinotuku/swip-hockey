@@ -36,14 +36,13 @@ swip(io, {
             }
 
             if (((blob.speedY < 0) &&
-              ((nextPosY - boundaryOffset) < client.transform.y
-              && !isWallOpenAtPosition(client.transform.x, client.openings.top, nextPosX)))) {
+              ((nextPosY - boundaryOffset) < client.transform.y)
+              && !isWallOpenAtPosition(client.transform.x, client.openings.top, nextPosX))) {
               nextPosY = client.transform.y + boundaryOffset;
               nextSpeedY = blob.speedY * -1;
             } else if (((blob.speedY > 0) &&
               ((nextPosY + boundaryOffset) > (client.transform.y + client.size.height))
-              && !isWallOpenAtPosition(client.transform.x, client.openings.bottom, nextPosX))
-            ) {
+              && !isWallOpenAtPosition(client.transform.x, client.openings.bottom, nextPosX))) {
               nextPosY = client.transform.y + (client.size.height - boundaryOffset);
               nextSpeedY = blob.speedY * -1;
             }
@@ -123,6 +122,14 @@ function getNewParticleDist (cluster1, cluster2, transform) {
         cluster2.data.blobs[i].y += transform.y;
       }
     }
+  });
+
+  cluster1.data.blobs.push({
+    x: cluster1.clients[0].size.width / 2,
+    y: cluster1.clients[0].size.height / 2,
+    speedX: 0,
+    speedY: 0,
+    size: 15,
   });
 
   return cluster1.data.blobs.concat(cluster2.data.blobs);
