@@ -102,6 +102,7 @@ function drawOpenings(ctx, client) {
   const transformY = client.transform.y;
   const width = client.size.width;
   const height = client.size.height;
+  const tmpGoal = {};
 
   ctx.lineWidth = 5;
   ctx.shadowBlur = 5;
@@ -122,6 +123,9 @@ function drawOpenings(ctx, client) {
     ctx.moveTo(width + transformX, (goalCenter - 75) + transformY);
     ctx.lineTo(width + transformX, (goalCenter + 75) + transformY);
     ctx.stroke();
+    tmpGoal.orientation = 'right';
+    tmpGoal.start = goalCenter - 75;
+    tmpGoal.end = goalCenter + 75;
   });
 
   openings.top.forEach((wall) => {
@@ -140,6 +144,9 @@ function drawOpenings(ctx, client) {
     ctx.moveTo((goalCenter - 75) + transformX, height + transformY);
     ctx.lineTo((goalCenter + 75) + transformX, height + transformY);
     ctx.stroke();
+    tmpGoal.orientation = 'bottom';
+    tmpGoal.start = goalCenter - 75;
+    tmpGoal.end = goalCenter + 75;
   });
 
   openings.right.forEach((wall) => {
@@ -158,6 +165,9 @@ function drawOpenings(ctx, client) {
     ctx.moveTo(transformX, (goalCenter - 75) + transformY);
     ctx.lineTo(transformX, (goalCenter + 75) + transformY);
     ctx.stroke();
+    tmpGoal.orientation = 'left';
+    tmpGoal.start = goalCenter - 75;
+    tmpGoal.end = goalCenter + 75;
   });
 
   openings.bottom.forEach((wall) => {
@@ -176,7 +186,12 @@ function drawOpenings(ctx, client) {
     ctx.moveTo((goalCenter - 75) + transformX, transformY);
     ctx.lineTo((goalCenter + 75) + transformX, transformY);
     ctx.stroke();
+    tmpGoal.orientation = 'top';
+    tmpGoal.start = goalCenter - 75;
+    tmpGoal.end = goalCenter + 75;
   });
+
+  return tmpGoal;
 }
 
 swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) => {
@@ -190,6 +205,12 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
   const activeStrikers = [];
   const clickedStrikers = [];
   const disToStriker = [];
+
+  let goalPosition = {
+    alignment: '',
+    start: null,
+    end: null,
+  };
 
   let bool1 = false;
   let bool2 = false;
@@ -229,7 +250,7 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
         evt.position.forEach((pos) => {
           for (let i = 0; i < clickedStrikers.length; i++) {
             if (touchInRadius(pos.x, pos.y,
-              clickedStrikers[i].x, clickedStrikers[i].y, clickedStrikers[i].size * 10)) {
+              clickedStrikers[i].x, clickedStrikers[i].y, clickedStrikers[i].size * 100000)) {
               clickedStrikers[i].x = pos.x - disToStriker[i].x;
               clickedStrikers[i].y = pos.y - disToStriker[i].y;
             }
@@ -297,8 +318,10 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
     applyTransform(ctx, converter, evt.client.transform);
 
     drawBackground(ctx, evt);
-    drawOpenings(ctx, evt.client);
+    goalPosition = drawOpenings(ctx, evt.client);
     drawBlobs(ctx, strikers, clickedStrikers, updatedBlobs);
+
+    client.emit('test', { blobs });
 
     ctx.restore();
   });

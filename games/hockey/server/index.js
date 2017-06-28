@@ -91,6 +91,14 @@ swip(io, {
           },
         }
       ),
+      test: ({ cluster, client }, { blobs }) => {
+        console.log(client);
+        return {
+          cluster: {
+            data: { blobs: { $set: blobs } },
+          },
+        };
+      },
     },
   },
 });
