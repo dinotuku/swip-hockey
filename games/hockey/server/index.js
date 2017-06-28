@@ -4,7 +4,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const swip = require('../../../src/server/index.js');
 
-app.use(express.static(`${__dirname}./../static`));
+app.use(express.static(`${__dirname}./../client/build`));
 
 swip(io, {
   cluster: {
@@ -77,20 +77,20 @@ swip(io, {
   client: {
     init: () => ({}),
     events: {
-      addBlobs: ({ cluster, client }, { blobs }) => {
-        return {
+      addBlobs: ({ cluster, client }, { blobs }) => (
+        {
           cluster: {
             data: { blobs: { $push: blobs } },
           },
-        };
-      },
-      updateBlobs: ({ cluster, client }, { blobs }) => {
-        return {
+        }
+      ),
+      updateBlobs: ({ cluster, client }, { blobs }) => (
+        {
           cluster: {
             data: { blobs: { $set: blobs } },
           },
-        };
-      },
+        }
+      ),
     },
   },
 });

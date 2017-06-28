@@ -1,0 +1,30 @@
+{
+  "name": "hockey-client",
+  "version": "1.0.0",
+  "description": "A multi screen hockey game.",
+  "scripts": {
+    "build": "webpack --env=dev",
+    "build:watch": "npm run build -- --watch",
+    "build:prod": "webpack --env=prod"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "jquery-ui": "^1.12.1",
+    "socket.io-client": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
+    "babel-preset-latest": "^6.24.1",
+    "css-loader": "^0.28.4",
+    "eslint": "^4.1.1",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.6.0",
+    "extract-text-webpack-plugin": "^2.1.2",
+    "html-webpack-plugin": "^2.29.0",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.0.0",
+    "webpack-manifest-plugin": "^1.1.0"
+  }
+}
