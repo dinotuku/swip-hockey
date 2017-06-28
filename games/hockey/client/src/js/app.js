@@ -13,7 +13,11 @@ $('.nextBtn').click(() => {
     $('.prevBtn').show();
     page += 1;
   } else if (page === 1) {
-    $('.gameInstructions').animate({ left: ['-200%', 'easeInOutQuad'] });
+    $('.gameInstructions').animate({ left: ['-200%', 'easeInOutQuad'] }, () => {
+      $('.thirdInstruction .rightScreen').animate({
+        backgroundColor: ['rgba(173, 216, 230, 1)', 'easeInOutQuad'],
+      }, () => { $('.ball').fadeIn(); });
+    });
     $('.nextBtn').html('Start');
     page += 1;
   } else {
@@ -27,7 +31,10 @@ $('.prevBtn').click(() => {
     $('.prevBtn').hide();
     page -= 1;
   } else {
-    $('.gameInstructions').animate({ left: ['-100%', 'easeInOutQuad'] });
+    $('.gameInstructions').animate({ left: ['-100%', 'easeInOutQuad'] }, () => {
+      $('.thirdInstruction .rightScreen').css('backgroundColor', 'rgba(240, 128, 128, 1)');
+      $('.ball').hide();
+    });
     $('.nextBtn').html('Next');
     page -= 1;
   }
@@ -320,8 +327,6 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
     drawBackground(ctx, evt);
     goalPosition = drawOpenings(ctx, evt.client);
     drawBlobs(ctx, strikers, clickedStrikers, updatedBlobs);
-
-    client.emit('test', { blobs });
 
     ctx.restore();
   });

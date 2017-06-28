@@ -1,14 +1,19 @@
 html, body {
+  position: relative;
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Lato', sans-serif;
   overflow: hidden;
 }
 
 button {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Lato', sans-serif;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 .gameStart {
@@ -20,16 +25,43 @@ button {
   text-align: center;
 }
 
+.gameStart h1 {
+  font-family: 'Merienda One', cursive;
+  font-size: 12vw;
+  margin-top: 55px;
+  margin-bottom: 0;
+  color: rgb(244, 247, 244);
+  text-shadow:
+    0 1px 0px #378ab4,
+    1px 0 0px #5dabcd,
+    1px 2px 1px #378ab4,
+    2px 1px 1px #5dabcd,
+    2px 3px 2px #378ab4,
+    3px 2px 2px #5dabcd,
+    3px 4px 2px #378ab4,
+    4px 3px 3px #5dabcd,
+    4px 5px 3px #378ab4,
+    5px 4px 2px #5dabcd,
+    5px 6px 2px #378ab4,
+    6px 5px 2px #5dabcd,
+    6px 7px 1px #378ab4,
+    7px 6px 1px #5dabcd,
+    7px 8px 0px #378ab4,
+    8px 7px 0px #5dabcd;
+}
+
 .gameInstructions {
   display: flex;
   position: absolute;
   width: 300%;
   height: 60vh;
+  overflow: hidden;
 }
 
 .firstInstruction,
 .secondInstruction,
 .thirdInstruction {
+  position: relative;
   display: flex;
   width: calc(100% / 3);
   height: 100%;
@@ -39,95 +71,329 @@ button {
 .rightSpace {
   position: relative;
   width: 50%;
-  height: 100%;
   margin: 0;
 }
 
 .leftScreen,
 .rightScreen {
   position: absolute;
-  top: 30%;
-  width: 55%;
-  height: 45%;
+  top: 20%;
+  width: 70%;
+  height: 55%;
+}
+
+.firstInstruction .leftScreen,
+.firstInstruction .rightScreen {
+  animation: fadeIn 2s cubic-bezier(0.39, 0.575, 0.565, 1);
 }
 
 .leftScreen {
-  left: 40%;
-  background-color: skyblue;
+  left: 25%;
+  background-color: rgba(173, 216, 230, 1);
 }
 
 .rightScreen {
-  right: 40%;
-  background-color: coral;
+  right: 25%;
+  background-color: rgba(240, 128, 128, 1);
 }
 
 .leftFinger,
 .rightFinger {
   position: absolute;
   top: 40%;
-  width: 35%;
+  width: 33%;
   height: 20%;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 100%;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
 }
 
 .leftFinger {
-  position: absolute;
   left: 40%;
-  top: 40%;
-  width: 35%;
-  height: 20%;
-  background-color: black;
-  border-radius: 100%;
-  animation-name: moveRight;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+  animation: fingerMoveRight 1s ease-in-out infinite;
 }
 
 .rightFinger {
-  position: absolute;
   right: 40%;
+  animation: fingerMoveLeft 1s ease-in-out infinite;
+}
+
+.striker {
+  position: absolute;
   top: 40%;
-  width: 35%;
-  height: 20%;
-  background-color: black;
+  left: 15%;
+  width: 30%;
+  height: 18%;
+  background-color: rgba(255, 255, 255, 1);
   border-radius: 100%;
-  animation-name: moveLeft;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+  animation: strikerMove 3s ease-in-out infinite;
+}
+
+.striker .wrapper {
+  position: relative;
+  height: 100%;
+}
+
+.strikerHandle {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  background-color: rgba(0, 0, 0, 1);
+  border-radius: 100%;
+}
+
+.ball {
+  display: none;
+  position: absolute;
+  top: 45%;
+  left: 65%;
+  width: 15%;
+  height: 9%;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 100%;
+}
+
+.instruction {
+  position: absolute;
+  top: 10%;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 
 .controlBtn {
+  display: flex;
+  justify-content: center;
   position: absolute;
   width: 100%;
-  bottom: 10vh;
+  bottom: 8vh;
+}
+
+.controlBtn .nextBtn,
+.controlBtn .prevBtn {
+  background-color: lightblue;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 3px;
+  padding: 10px;
+  color: white;
+}
+
+.controlBtn .nextBtn {
+  margin-left: 8px;
+  margin-right: 8px;
+  -webkit-animation: breathing 1.2s ease-out infinite normal;
+  animation: breathing 1.2s ease-out infinite normal;
 }
 
 .controlBtn .prevBtn {
   display: none;
+  font-size: 18px;
+  margin: 4px 8px;
 }
 
-@-webkit-keyframes moveRight {
-    from {left: 40%;}
-    to {left: 70%;}
+@-webkit-keyframes fingerMoveRight {
+  from { left: 38%; }
+  to { left: 72%; }
 }
 
-@keyframes moveRight {
-    from {left: 40%;}
-    to {left: 70%;}
+@keyframes fingerMoveRight {
+  from { left: 38%; }
+  to { left: 72%; }
 }
 
-@-webkit-keyframes moveLeft {
-    from {right: 40%;}
-    to {right: 70%;}
+@-webkit-keyframes fingerMoveLeft {
+  from { right: 38%; }
+  to { right: 72%; }
 }
 
-@keyframes moveLeft {
-    from {right: 40%;}
-    to {right: 70%;}
+@keyframes fingerMoveLeft {
+  from { right: 38%; }
+  to { right: 72%; }
+}
+
+@-webkit-keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  25% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+@keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  25% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@-webkit-keyframes strikerMove {
+  0% {
+    top: 40%;
+    left: 15%;
+  }
+
+  20% {
+    top: 40%;
+    left: 35%;
+  }
+
+  40% {
+    top: 40%;
+    left: 15%;
+  }
+
+  60% {
+    top: 60%;
+    left: 15%;
+  }
+
+  80% {
+    top: 20%;
+    left: 15%;
+  }
+
+  100% {
+    top: 40%;
+    left: 15%;
+  }
+}
+
+@keyframes strikerMove {
+  0% {
+    top: 40%;
+    left: 15%;
+  }
+
+  20% {
+    top: 40%;
+    left: 35%;
+  }
+
+  40% {
+    top: 40%;
+    left: 15%;
+  }
+
+  60% {
+    top: 60%;
+    left: 15%;
+  }
+
+  80% {
+    top: 20%;
+    left: 15%;
+  }
+
+  100% {
+    top: 40%;
+    left: 15%;
+  }
+}
+
+@media (orientation: landscape) {
+  .gameStart h1 {
+    font-size: 12vh;
+    margin-top: 30px;
+    margin-bottom: 0;
+  }
+
+  .leftScreen,
+  .rightScreen {
+    top: 16%;
+    width: 60%;
+    height: 65%;
+  }
+
+  .leftScreen {
+    left: 35%;
+  }
+
+  .rightScreen {
+    right: 35%;
+  }
+
+  .leftFinger,
+  .rightFinger {
+    top: 35%;
+    width: 25%;
+    height: 34%;
+  }
+
+  .striker {
+    width: 21%;
+    height: 30%;
+  }
+
+  .ball {
+    top: 48%;
+    width: 9%;
+    height: 13%;
+  }
+
+  .instruction {
+    top: 2%;
+  }
+
+  @-webkit-keyframes fingerMoveRight {
+    from {left: 60%;}
+    to {left: 83%;}
+  }
+
+  @keyframes fingerMoveRight {
+      from {left: 60%;}
+      to {left: 83%;}
+  }
+
+  @-webkit-keyframes fingerMoveLeft {
+      from {right: 60%;}
+      to {right: 83%;}
+  }
+
+  @keyframes fingerMoveLeft {
+      from {right: 60%;}
+      to {right: 83%;}
+  }
 }
