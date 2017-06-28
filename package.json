@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/server/index.js",
   "scripts": {
+    "start": "yarn run hockey",
     "test": "mocha",
     "dev": "webpack --watch",
     "build": "webpack",

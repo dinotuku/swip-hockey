@@ -15,7 +15,8 @@
     var activeStrikers = [];
     var clickedStrikers = [];
     var disToStriker = [];
-    let bool = false;
+    let bool1 = false;
+    let bool2 = false;
 
     client.onDragStart(function (evt) {
       evt.position.forEach(function (pos) {
@@ -56,7 +57,7 @@
                 clickedStrikers[i].y = pos.y - disToStriker[i].y;
               }
               if (blobs[0]) {
-                if (touchInRadius(pos.x, pos.y, blobs[0].x, blobs[0].y, blobs[0].size * 2)) {
+                if (touchInRadius(clickedStrikers[i].x, clickedStrikers[i].y, blobs[0].x, blobs[0].y, blobs[0].size + clickedStrikers[i].size)) {
                   blobs[0].speedX = (blobs[0].x - clickedStrikers[i].x) / 2;
                   blobs[0].speedY = (blobs[0].y - clickedStrikers[i].y) / 2;
                 }
@@ -122,10 +123,13 @@
       var updatedBlobs = evt.cluster.data.blobs;
       blobs = updatedBlobs;
 
-      if (evt.client.transform.x && strikers.length && !bool) {
-        bool = true;
+      if (evt.client.transform.x && strikers.length && !bool1) {
+        bool1 = true;
         strikers[0].x += evt.client.transform.x;
-        strikers[0].y -= evt.client.transform.y;
+      }
+      if (evt.client.transform.y && strikers.length && !bool2) {
+        bool2 = true;
+        strikers[0].y += evt.client.transform.y;
       }
 
       ctx.save();
@@ -172,8 +176,12 @@
 
     strikers.forEach(function(blob) {
       ctx.beginPath();
-      ctx.arc(blob.x, blob.y, blob.size , 0, 2 * Math.PI, false);
+      ctx.arc(blob.x, blob.y, blob.size, 0, 2 * Math.PI, false);
       ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(blob.x, blob.y, blob.size / 2.5, 0, 2 * Math.PI, false);
+      ctx.fillStyle = '#000000';
       ctx.fill();
     });
 
@@ -181,6 +189,10 @@
       ctx.beginPath();
       ctx.arc(blob.x, blob.y, blob.size , 0, 2 * Math.PI, false);
       ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(blob.x, blob.y, blob.size / 2.5, 0, 2 * Math.PI, false);
+      ctx.fillStyle = '#000000';
       ctx.fill();
     });
 
