@@ -27,9 +27,79 @@ button {
   height: 60vh;
 }
 
-.gameInstructions * {
+.firstInstruction,
+.secondInstruction,
+.thirdInstruction {
+  display: flex;
   width: calc(100% / 3);
   height: 100%;
+}
+
+.leftSpace,
+.rightSpace {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  margin: 0;
+}
+
+.leftScreen,
+.rightScreen {
+  position: absolute;
+  top: 30%;
+  width: 55%;
+  height: 45%;
+}
+
+.leftScreen {
+  left: 40%;
+  background-color: skyblue;
+}
+
+.rightScreen {
+  right: 40%;
+  background-color: coral;
+}
+
+.leftFinger,
+.rightFinger {
+  position: absolute;
+  top: 40%;
+  width: 35%;
+  height: 20%;
+  background-color: black;
+  border-radius: 100%;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.leftFinger {
+  position: absolute;
+  left: 40%;
+  top: 40%;
+  width: 35%;
+  height: 20%;
+  background-color: black;
+  border-radius: 100%;
+  animation-name: moveRight;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.rightFinger {
+  position: absolute;
+  right: 40%;
+  top: 40%;
+  width: 35%;
+  height: 20%;
+  background-color: black;
+  border-radius: 100%;
+  animation-name: moveLeft;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
 }
 
 .controlBtn {
@@ -40,4 +110,24 @@ button {
 
 .controlBtn .prevBtn {
   display: none;
+}
+
+@-webkit-keyframes moveRight {
+    from {left: 40%;}
+    to {left: 70%;}
+}
+
+@keyframes moveRight {
+    from {left: 40%;}
+    to {left: 70%;}
+}
+
+@-webkit-keyframes moveLeft {
+    from {right: 40%;}
+    to {right: 70%;}
+}
+
+@keyframes moveLeft {
+    from {right: 40%;}
+    to {right: 70%;}
 }
