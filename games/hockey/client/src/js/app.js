@@ -217,76 +217,84 @@ function drawOpenings(ctx, client) {
   return tmpGoal;
 }
 
-function checkGoal (ctx, client, blobs, goalpos) {
+function checkGoal(ctx, client, blobs, goalpos) {
   let isGoal = false;
   blobs.map((blob) => {
     const boundaryOffset = blob.size;
-    let nextPosX = blob.x + blob.speedX;
-    let nextPosY = blob.y + blob.speedY;
-    let nextSpeedX = blob.speedX;
-    let nextSpeedY = blob.speedY;
+    const nextPosX = blob.x + blob.speedX;
+    const nextPosY = blob.y + blob.speedY;
 
     if (((blob.speedX < 0) &&
-      (goalpos.alignment == 'left') &&
+      (goalpos.alignment === 'left') &&
       ((nextPosX - boundaryOffset) < client.transform.x))) {
-        if(nextPosY >= (goalpos.start + client.transform.y) && nextPosY <= (goalpos.end + client.transform.y)){
-          isGoal = true;
-        }
+      if (nextPosY >= (goalpos.start + client.transform.y) &&
+         nextPosY <= (goalpos.end + client.transform.y)) {
+        isGoal = true;
+      }
     } else if (((blob.speedX > 0) &&
-      (goalpos.alignment == 'right') &&
+      (goalpos.alignment === 'right') &&
       ((nextPosX + boundaryOffset) > (client.transform.x + client.size.width)))) {
-        if(nextPosY >= (goalpos.start + client.transform.y) && nextPosY <= (goalpos.end + client.transform.y)){
-          isGoal = true;
-        }
+      if (nextPosY >= (goalpos.start + client.transform.y) &&
+       nextPosY <= (goalpos.end + client.transform.y)) {
+        isGoal = true;
+      }
     }
     if (((blob.speedY < 0) &&
-      (goalpos.alignment == 'top') &&
+      (goalpos.alignment === 'top') &&
       ((nextPosY - boundaryOffset) < client.transform.y))) {
-        if(nextPosX >= (goalpos.start + client.transform.x) && nextPosX <= (goalpos.end + client.transform.x)){
-          isGoal = true;
-        }
+      if (nextPosX >= (goalpos.start + client.transform.x) &&
+         nextPosX <= (goalpos.end + client.transform.x)) {
+        isGoal = true;
+      }
     } else if (((blob.speedY > 0) &&
-      (goalpos.alignment == 'bottom') &&
+      (goalpos.alignment === 'bottom') &&
       ((nextPosY + boundaryOffset) > (client.transform.y + client.size.height)))) {
-        if(nextPosX >= (goalpos.start + client.transform.x) && nextPosX <= (goalpos.end + client.transform.x)){
-          isGoal = true;
-        }
+      if (nextPosX >= (goalpos.start + client.transform.x) &&
+        nextPosX <= (goalpos.end + client.transform.x)) {
+        isGoal = true;
+      }
     }
+    return null;
   });
 
   return isGoal;
 }
 
-function drawLife (ctx, client, LifeText) {
+function drawLife(ctx, client, LifeText) {
   // console.log(LifeText);
-  if( (LifeText.alignment == 'default') || (LifeText.life <= 0) ){
+  if ((LifeText.alignment === 'default') || (LifeText.life <= 0)) {
     return;
   }
-  let offsetX = 20;
-  let offsetY = 20;
+  const offsetX = 20;
+  const offsetY = 20;
   let offsetSpace = 0;
-  for(let i = 0; i < LifeText.life; ++i){
+  for (let i = 0; i < LifeText.life; i += 1) {
     ctx.beginPath();
-    if( (LifeText.alignment == 'top') || (LifeText.alignment == 'left') ){
-      ctx.arc(client.transform.x + offsetX + offsetSpace,  client.transform.y + offsetY, 15, 0, 2 * Math.PI, false);
-    } else if(LifeText.alignment == 'right') {
-      ctx.arc(client.transform.x + client.size.width - offsetX - offsetSpace, client.transform.y + offsetY, 15, 0, 2 * Math.PI, false);
-    } else if(LifeText.alignment == 'bottom'){
-      ctx.arc(client.transform.x + client.size.width - offsetX - offsetSpace, client.transform.y + client.size.height - offsetY, 15, 0, 2 * Math.PI, false);
+    if ((LifeText.alignment === 'top') || (LifeText.alignment === 'left')) {
+      ctx.arc(client.transform.x + offsetX + offsetSpace,
+        client.transform.y + offsetY, 15, 0, 2 * Math.PI, false);
+    } else if (LifeText.alignment === 'right') {
+      ctx.arc((client.transform.x + client.size.width) - offsetX - offsetSpace,
+        client.transform.y + offsetY, 15, 0, 2 * Math.PI, false);
+    } else if (LifeText.alignment === 'bottom') {
+      ctx.arc((client.transform.x + client.size.width) - offsetX - offsetSpace,
+        (client.transform.y + client.size.height) - offsetY, 15, 0, 2 * Math.PI, false);
     }
-    ctx.fillStyle = '#FFFFFF';
+    ctx.fillStyle = '#FF0000';
     ctx.fill();
     offsetSpace += 35;
   }
 
-  /*if(LifeText.alignment == 'top'){
+  /* if(LifeText.alignment == 'top'){
     ctx.fillText('Life: ' + LifeText.life, client.transform.x, client.transform.y);
   } else if(LifeText.alignment == 'bottom') {
-    ctx.fillText('Life: ' + LifeText.life, client.transform.x, client.transform.y + client.size.height);
+    ctx.fillText('Life: ' + LifeText.life, client.transform.x,
+     client.transform.y + client.size.height);
   } else if(LifeText.alignment == 'left') {
     ctx.fillText('Life: ' + LifeText.life, client.transform.x, client.transform.y);
   } else if(LifeText.alignment == 'right') {
-    ctx.fillText('Life: ' + LifeText.life, client.transform.x + client.size.width, client.transform.y);
+    ctx.fillText('Life: ' + LifeText.life, client.transform.x + client.size.width,
+     client.transform.y);
   }*/
 }
 
@@ -308,17 +316,17 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
     end: null,
   };
 
-  let LifeText = {
+  const LifeText = {
     alignment: 'default',
     life: 3,
-  }
+  };
 
   let bool1 = false;
   let bool2 = false;
 
   client.onDragStart((evt) => {
     evt.position.forEach((pos) => {
-      for (let i = 0; i < strikers.length; i++) {
+      for (let i = 0; i < strikers.length; i += 1) {
         if (touchInRadius(pos.x, pos.y, strikers[i].x, strikers[i].y, strikers[i].size * 1.2)) {
           clickedStrikers.push(strikers.splice(i, 1)[0]);
           disToStriker.push({
@@ -349,7 +357,7 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
     if (clickedStrikers.length > 0) {
       if (counter >= 3) {
         evt.position.forEach((pos) => {
-          for (let i = 0; i < clickedStrikers.length; i++) {
+          for (let i = 0; i < clickedStrikers.length; i += 1) {
             if (touchInRadius(pos.x, pos.y,
               clickedStrikers[i].x, clickedStrikers[i].y, clickedStrikers[i].size * 100000)) {
               clickedStrikers[i].x = pos.x - disToStriker[i].x;
@@ -367,14 +375,14 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
         });
         counter = 0;
       }
-      counter++;
+      counter += 1;
     } else {
       evt.position.forEach((pos) => {
-        for (let i = 0; i < activeStrikers.length; i++) {
+        for (let i = 0; i < activeStrikers.length; i += 1) {
           if (touchInRadius(pos.x, pos.y,
             activeStrikers[i].x, activeStrikers[i].y, activeStrikers[i].size)) {
             activeStrikers.splice(i, 1);
-            i--;
+            i -= 1;
           }
         }
       });
@@ -385,12 +393,12 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
     if (clickedStrikers.length === 0) {
       evt.position.forEach((pos) => {
         const emitBlobs = [];
-        for (let i = 0; i < activeStrikers.length; i++) {
+        for (let i = 0; i < activeStrikers.length; i += 1) {
           if (touchInRadius(pos.x, pos.y,
             activeStrikers[i].x, activeStrikers[i].y, activeStrikers[i].size)) {
             emitBlobs.push(activeStrikers[i]);
             activeStrikers.splice(i, 1);
-            i--;
+            i -= 1;
           }
         }
         if (emitBlobs.length) {
@@ -422,10 +430,10 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
     goalPosition = drawOpenings(ctx, evt.client);
     LifeText.alignment = goalPosition.alignment;
     drawBlobs(ctx, strikers, clickedStrikers, updatedBlobs);
-    if(checkGoal(ctx, evt.client, blobs, goalPosition)) {
-      // client.emit('test', { blobs });
-      blobs[0].x = evt.client.transform.x + evt.client.size.width/2;
-      blobs[0].y = evt.client.transform.y + evt.client.size.height/2;
+    if (checkGoal(ctx, evt.client, blobs, goalPosition)) {
+      client.emit('test', { blobs });
+      blobs[0].x = evt.client.transform.x + (evt.client.size.width / 2);
+      blobs[0].y = evt.client.transform.y + (evt.client.size.height / 2);
       blobs[0].speedX = 0;
       blobs[0].speedY = 0;
       LifeText.life -= 1;
