@@ -284,18 +284,6 @@ function drawLife(ctx, client, LifeText) {
     ctx.fill();
     offsetSpace += 35;
   }
-
-  /* if(LifeText.alignment == 'top'){
-    ctx.fillText('Life: ' + LifeText.life, client.transform.x, client.transform.y);
-  } else if(LifeText.alignment == 'bottom') {
-    ctx.fillText('Life: ' + LifeText.life, client.transform.x,
-     client.transform.y + client.size.height);
-  } else if(LifeText.alignment == 'left') {
-    ctx.fillText('Life: ' + LifeText.life, client.transform.x, client.transform.y);
-  } else if(LifeText.alignment == 'right') {
-    ctx.fillText('Life: ' + LifeText.life, client.transform.x + client.size.width,
-     client.transform.y);
-  }*/
 }
 
 swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) => {
@@ -318,7 +306,7 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
 
   const LifeText = {
     alignment: 'default',
-    life: 3,
+    life: 5,
   };
 
   let bool1 = false;
@@ -416,12 +404,28 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
     if (evt.client.transform.x && strikers.length && !bool1) {
       bool1 = true;
       strikers[0].x += evt.client.transform.x;
+      LifeText.life = 5;
     }
     if (evt.client.transform.y && strikers.length && !bool2) {
       bool2 = true;
       strikers[0].y += evt.client.transform.y;
+      LifeText.life = 5;
     }
 
+    if (evt.client.result === 'win') {
+      $('.winInfo').show();
+    } else if (evt.client.result === 'lose') {
+      $('.loseInfo').show();
+    } else if (evt.client.result === 'reset') {
+      LifeText.life = 5;
+      $('.loseInfo').hide();
+      $('.winInfo').hide();
+      client.emit('resetResult', { blobs });
+    }
+
+    $('.rematchBtn').click(() => {
+      client.emit('resetGame', { blobs });
+    });
     ctx.save();
 
     applyTransform(ctx, converter, evt.client.transform);
@@ -431,12 +435,14 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
     LifeText.alignment = goalPosition.alignment;
     drawBlobs(ctx, strikers, clickedStrikers, updatedBlobs);
     if (checkGoal(ctx, evt.client, blobs, goalPosition)) {
-      client.emit('test', { blobs });
       blobs[0].x = evt.client.transform.x + (evt.client.size.width / 2);
       blobs[0].y = evt.client.transform.y + (evt.client.size.height / 2);
       blobs[0].speedX = 0;
       blobs[0].speedY = 0;
       LifeText.life -= 1;
+      if (LifeText.life === 0) {
+        client.emit('gameOver', { blobs });
+      }
       client.emit('updateBlobs', { blobs });
     }
     drawLife(ctx, evt.client, LifeText);

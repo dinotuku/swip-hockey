@@ -67,7 +67,7 @@ swip(io, {
         };
       },
       merge: (cluster1, cluster2, transform) => ({
-        blobs: { $set: getNewParticleDist(cluster1, cluster2, transform) },
+        blobs: { $set: getNewParticleDist(cluster1, cluster2) },
         backgroundColor: { $set: cluster1.data.backgroundColor },
       }),
     },
@@ -91,7 +91,37 @@ swip(io, {
           },
         }
       ),
-      test: ({ cluster, client }, { blobs }) => {
+      gameOver: ({ cluster, client }, { blobs }) => {
+        cluster.clients.forEach((cli) => {
+          if (cli === client) {
+            cli.result = 'lose';
+          } else {
+            cli.result = 'win';
+          }
+          return cli;
+        });
+        return {
+          cluster: {
+            data: { blobs: { $set: blobs } },
+          },
+        };
+      },
+      resetGame: ({ cluster, client }, { blobs }) => {
+        cluster.clients.forEach((cli) => {
+          cli.result = 'reset';
+          return cli;
+        });
+        return {
+          cluster: {
+            data: { blobs: { $set: blobs } },
+          },
+        };
+      },
+      resetResult: ({ cluster, client }, { blobs }) => {
+        cluster.clients.forEach((cli) => {
+          cli.result = 'default';
+          return cli;
+        });
         return {
           cluster: {
             data: { blobs: { $set: blobs } },
@@ -121,16 +151,9 @@ function isWallOpenAtPosition (transform, openings, particlePos) {
   ));
 }
 
-function getNewParticleDist (cluster1, cluster2, transform) {
-  cluster2.clients.forEach((client) => {
-    for (let i = 0; i < cluster2.data.blobs.length; i++) {
-      if (isParticleInClient(cluster2.data.blobs[i], client)) {
-        cluster2.data.blobs[i].x += transform.x;
-        cluster2.data.blobs[i].y += transform.y;
-      }
-    }
-  });
-
+function getNewParticleDist (cluster1, cluster2) {
+  cluster1.data.blobs = [];
+  cluster2.data.blobs = [];
   cluster1.data.blobs.push({
     x: cluster1.clients[0].size.width / 2,
     y: cluster1.clients[0].size.height / 2,
@@ -143,7 +166,7 @@ function getNewParticleDist (cluster1, cluster2, transform) {
 }
 
 function getRandomColor () {
-  const colors = ['#ffb3ba', '#ffdfba', '#ffffba', '#baffc9', '#bae1ff'];
+  const colors = ['#e8d174', '#e39e54', '#0ea7b5', '#4d7358', '#91d670'];
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
