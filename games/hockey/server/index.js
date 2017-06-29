@@ -143,7 +143,7 @@ function getNewParticleDist (cluster1, cluster2, transform) {
 }
 
 function getRandomColor () {
-  const colors = ['#f16745', '#ffc65d', '#7bc8a4', '#4cc3d9', '#93648d'];
+  const colors = ['#ffb3ba', '#ffdfba', '#ffffba', '#baffc9', '#bae1ff'];
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
