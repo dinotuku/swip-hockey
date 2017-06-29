@@ -111,6 +111,7 @@ function drawOpenings(ctx, client) {
   const height = client.size.height;
   const tmpGoal = {};
 
+  tmpGoal.alignment = 'default';
   ctx.lineWidth = 5;
   ctx.shadowBlur = 5;
 
@@ -130,7 +131,7 @@ function drawOpenings(ctx, client) {
     ctx.moveTo(width + transformX, (goalCenter - 75) + transformY);
     ctx.lineTo(width + transformX, (goalCenter + 75) + transformY);
     ctx.stroke();
-    tmpGoal.orientation = 'right';
+    tmpGoal.alignment = 'right';
     tmpGoal.start = goalCenter - 75;
     tmpGoal.end = goalCenter + 75;
   });
@@ -151,7 +152,7 @@ function drawOpenings(ctx, client) {
     ctx.moveTo((goalCenter - 75) + transformX, height + transformY);
     ctx.lineTo((goalCenter + 75) + transformX, height + transformY);
     ctx.stroke();
-    tmpGoal.orientation = 'bottom';
+    tmpGoal.alignment = 'bottom';
     tmpGoal.start = goalCenter - 75;
     tmpGoal.end = goalCenter + 75;
   });
@@ -172,7 +173,7 @@ function drawOpenings(ctx, client) {
     ctx.moveTo(transformX, (goalCenter - 75) + transformY);
     ctx.lineTo(transformX, (goalCenter + 75) + transformY);
     ctx.stroke();
-    tmpGoal.orientation = 'left';
+    tmpGoal.alignment = 'left';
     tmpGoal.start = goalCenter - 75;
     tmpGoal.end = goalCenter + 75;
   });
@@ -193,12 +194,85 @@ function drawOpenings(ctx, client) {
     ctx.moveTo((goalCenter - 75) + transformX, transformY);
     ctx.lineTo((goalCenter + 75) + transformX, transformY);
     ctx.stroke();
-    tmpGoal.orientation = 'top';
+    tmpGoal.alignment = 'top';
     tmpGoal.start = goalCenter - 75;
     tmpGoal.end = goalCenter + 75;
   });
 
   return tmpGoal;
+}
+
+function checkGoal (ctx, client, blobs, goalpos) {
+  let isGoal = false;
+  blobs.map((blob) => {
+    const boundaryOffset = blob.size;
+    let nextPosX = blob.x + blob.speedX;
+    let nextPosY = blob.y + blob.speedY;
+    let nextSpeedX = blob.speedX;
+    let nextSpeedY = blob.speedY;
+
+    if (((blob.speedX < 0) &&
+      (goalpos.alignment == 'left') &&
+      ((nextPosX - boundaryOffset) < client.transform.x))) {
+        if(nextPosY >= (goalpos.start + client.transform.y) && nextPosY <= (goalpos.end + client.transform.y)){
+          isGoal = true;
+        }
+    } else if (((blob.speedX > 0) &&
+      (goalpos.alignment == 'right') &&
+      ((nextPosX + boundaryOffset) > (client.transform.x + client.size.width)))) {
+        if(nextPosY >= (goalpos.start + client.transform.y) && nextPosY <= (goalpos.end + client.transform.y)){
+          isGoal = true;
+        }
+    }
+    if (((blob.speedY < 0) &&
+      (goalpos.alignment == 'top') &&
+      ((nextPosY - boundaryOffset) < client.transform.y))) {
+        if(nextPosX >= (goalpos.start + client.transform.x) && nextPosX <= (goalpos.end + client.transform.x)){
+          isGoal = true;
+        }
+    } else if (((blob.speedY > 0) &&
+      (goalpos.alignment == 'bottom') &&
+      ((nextPosY + boundaryOffset) > (client.transform.y + client.size.height)))) {
+        if(nextPosX >= (goalpos.start + client.transform.x) && nextPosX <= (goalpos.end + client.transform.x)){
+          isGoal = true;
+        }
+    }
+  });
+
+  return isGoal;
+}
+
+function drawLife (ctx, client, LifeText) {
+  // console.log(LifeText);
+  if( (LifeText.alignment == 'default') || (LifeText.life <= 0) ){
+    return;
+  }
+  let offsetX = 20;
+  let offsetY = 20;
+  let offsetSpace = 0;
+  for(let i = 0; i < LifeText.life; ++i){
+    ctx.beginPath();
+    if( (LifeText.alignment == 'top') || (LifeText.alignment == 'left') ){
+      ctx.arc(client.transform.x + offsetX + offsetSpace,  client.transform.y + offsetY, 15, 0, 2 * Math.PI, false);
+    } else if(LifeText.alignment == 'right') {
+      ctx.arc(client.transform.x + client.size.width - offsetX - offsetSpace, client.transform.y + offsetY, 15, 0, 2 * Math.PI, false);
+    } else if(LifeText.alignment == 'bottom'){
+      ctx.arc(client.transform.x + client.size.width - offsetX - offsetSpace, client.transform.y + client.size.height - offsetY, 15, 0, 2 * Math.PI, false);
+    }
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fill();
+    offsetSpace += 35;
+  }
+
+  /*if(LifeText.alignment == 'top'){
+    ctx.fillText('Life: ' + LifeText.life, client.transform.x, client.transform.y);
+  } else if(LifeText.alignment == 'bottom') {
+    ctx.fillText('Life: ' + LifeText.life, client.transform.x, client.transform.y + client.size.height);
+  } else if(LifeText.alignment == 'left') {
+    ctx.fillText('Life: ' + LifeText.life, client.transform.x, client.transform.y);
+  } else if(LifeText.alignment == 'right') {
+    ctx.fillText('Life: ' + LifeText.life, client.transform.x + client.size.width, client.transform.y);
+  }*/
 }
 
 swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) => {
@@ -214,10 +288,15 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
   const disToStriker = [];
 
   let goalPosition = {
-    alignment: '',
+    alignment: 'default',
     start: null,
     end: null,
   };
+
+  let LifeText = {
+    alignment: 'default',
+    life: 3,
+  }
 
   let bool1 = false;
   let bool2 = false;
@@ -326,7 +405,18 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
 
     drawBackground(ctx, evt);
     goalPosition = drawOpenings(ctx, evt.client);
+    LifeText.alignment = goalPosition.alignment;
     drawBlobs(ctx, strikers, clickedStrikers, updatedBlobs);
+    if(checkGoal(ctx, evt.client, blobs, goalPosition)) {
+      // client.emit('test', { blobs });
+      blobs[0].x = evt.client.transform.x + evt.client.size.width/2;
+      blobs[0].y = evt.client.transform.y + evt.client.size.height/2;
+      blobs[0].speedX = 0;
+      blobs[0].speedY = 0;
+      LifeText.life -= 1;
+      client.emit('updateBlobs', { blobs });
+    }
+    drawLife(ctx, evt.client, LifeText);
 
     ctx.restore();
   });
