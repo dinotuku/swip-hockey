@@ -4,12 +4,12 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Lora', serif;
   overflow: hidden;
 }
 
 button {
-  font-family: 'Lato', sans-serif;
+  font-family: 'Lora', serif;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -67,6 +67,15 @@ button {
   height: 100%;
 }
 
+.instruction {
+  position: absolute;
+  top: 10%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  color: rgba(60, 179, 113, 1);
+}
+
 .leftSpace,
 .rightSpace {
   position: relative;
@@ -82,11 +91,6 @@ button {
   height: 55%;
 }
 
-.firstInstruction .leftScreen,
-.firstInstruction .rightScreen {
-  animation: fadeIn 2s cubic-bezier(0.39, 0.575, 0.565, 1);
-}
-
 .leftScreen {
   left: 25%;
   background-color: rgba(173, 216, 230, 1);
@@ -97,8 +101,17 @@ button {
   background-color: rgba(240, 128, 128, 1);
 }
 
+.firstInstruction .leftScreen {
+  animation: fadeInMoveRight 1.2s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.firstInstruction .rightScreen {
+  animation: fadeInMoveLeft 1.2s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
 .leftFinger,
 .rightFinger {
+  display: none;
   position: absolute;
   top: 40%;
   width: 33%;
@@ -117,7 +130,8 @@ button {
   animation: fingerMoveLeft 1s ease-in-out infinite;
 }
 
-.striker {
+.leftStriker {
+  display: none;
   position: absolute;
   top: 40%;
   left: 15%;
@@ -125,20 +139,32 @@ button {
   height: 18%;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 100%;
-  animation: strikerMove 3s ease-in-out infinite;
+  animation: leftStrikerMove 3s ease-in-out infinite;
 }
 
-.striker .wrapper {
+.rightStriker {
+  display: none;
+  position: absolute;
+  top: 40%;
+  right: 15%;
+  width: 30%;
+  height: 18%;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 100%;
+  animation: rightStrikerMove 3s ease-in-out infinite;
+}
+
+.wrapper {
   position: relative;
   height: 100%;
 }
 
 .strikerHandle {
   position: absolute;
-  top: 25%;
-  left: 25%;
-  width: 50%;
-  height: 50%;
+  top: 30%;
+  left: 30%;
+  width: 40%;
+  height: 40%;
   background-color: rgba(0, 0, 0, 1);
   border-radius: 100%;
 }
@@ -152,14 +178,6 @@ button {
   height: 9%;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 100%;
-}
-
-.instruction {
-  position: absolute;
-  top: 10%;
-  left: 0;
-  right: 0;
-  margin: auto;
 }
 
 .controlBtn {
@@ -193,6 +211,50 @@ button {
   display: none;
   font-size: 18px;
   margin: 4px 8px;
+}
+
+@-webkit-keyframes fadeInMoveRight {
+  from {
+    opacity: 0;
+    left: 10% 
+  }
+  to {
+    opacity: 1;
+    left: 25%
+  }
+}
+
+@keyframes fadeInMoveRight {
+  from {
+    opacity: 0;
+    left: 10% 
+  }
+  to {
+    opacity: 1;
+    left: 25%
+  }
+}
+
+@-webkit-keyframes fadeInMoveLeft {
+  from {
+    opacity: 0;
+    right: 10% 
+  }
+  to {
+    opacity: 1;
+    right: 25%
+  }
+}
+
+@keyframes fadeInMoveLeft {
+  from {
+    opacity: 0;
+    right: 10% 
+  }
+  to {
+    opacity: 1;
+    right: 25%
+  }
 }
 
 @-webkit-keyframes fingerMoveRight {
@@ -259,17 +321,7 @@ button {
   }
 }
 
-@-webkit-keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@-webkit-keyframes strikerMove {
+@-webkit-keyframes leftStrikerMove {
   0% {
     top: 40%;
     left: 15%;
@@ -301,7 +353,7 @@ button {
   }
 }
 
-@keyframes strikerMove {
+@keyframes leftStrikerMove {
   0% {
     top: 40%;
     left: 15%;
@@ -330,13 +382,77 @@ button {
   100% {
     top: 40%;
     left: 15%;
+  }
+}
+
+@-webkit-keyframes rightStrikerMove {
+  0% {
+    top: 40%;
+    right: 15%;
+  }
+
+  20% {
+    top: 40%;
+    right: 35%;
+  }
+
+  40% {
+    top: 40%;
+    right: 15%;
+  }
+
+  60% {
+    top: 20%;
+    right: 15%;
+  }
+
+  80% {
+    top: 60%;
+    right: 15%;
+  }
+
+  100% {
+    top: 40%;
+    right: 15%;
+  }
+}
+
+@keyframes rightStrikerMove {
+  0% {
+    top: 40%;
+    right: 15%;
+  }
+
+  20% {
+    top: 40%;
+    right: 35%;
+  }
+
+  40% {
+    top: 40%;
+    right: 15%;
+  }
+
+  60% {
+    top: 20%;
+    right: 15%;
+  }
+
+  80% {
+    top: 60%;
+    right: 15%;
+  }
+
+  100% {
+    top: 40%;
+    right: 15%;
   }
 }
 
 @media (orientation: landscape) {
   .gameStart h1 {
     font-size: 12vh;
-    margin-top: 30px;
+    margin-top: 25px;
     margin-bottom: 0;
   }
 
@@ -362,7 +478,8 @@ button {
     height: 34%;
   }
 
-  .striker {
+  .leftStriker,
+  .rightStriker {
     width: 21%;
     height: 30%;
   }
