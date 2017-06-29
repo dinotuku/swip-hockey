@@ -261,7 +261,6 @@ function checkGoal(ctx, client, blobs, goalpos) {
 }
 
 function drawLife(ctx, client, LifeText) {
-  // console.log(LifeText);
   if ((LifeText.alignment === 'default') || (LifeText.life <= 0)) {
     return;
   }
@@ -311,6 +310,7 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
 
   let bool1 = false;
   let bool2 = false;
+  let lastResult = '';
 
   client.onDragStart((evt) => {
     evt.position.forEach((pos) => {
@@ -401,6 +401,7 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
     const updatedBlobs = evt.cluster.data.blobs;
     blobs = updatedBlobs;
 
+
     if (evt.client.transform.x && strikers.length && !bool1) {
       bool1 = true;
       strikers[0].x += evt.client.transform.x;
@@ -412,20 +413,27 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
       LifeText.life = 5;
     }
 
-    if (evt.client.result === 'win') {
-      $('.winInfo').show();
-    } else if (evt.client.result === 'lose') {
-      $('.loseInfo').show();
-    } else if (evt.client.result === 'reset') {
-      LifeText.life = 5;
-      $('.loseInfo').hide();
-      $('.winInfo').hide();
-      client.emit('resetResult', { blobs });
-    }
-
     $('.rematchBtn').click(() => {
       client.emit('resetGame', { blobs });
     });
+
+    if (lastResult !== evt.client.result) {
+      lastResult = evt.client.result;
+      if (lastResult === 'win') {
+        $('.winInfo').show();
+        console.log('Win show');
+      } else if (lastResult === 'lose') {
+        $('.loseInfo').show();
+        console.log('Lose show');
+      } else if (lastResult === 'reset') {
+        LifeText.life = 5;
+        $('.winInfo').hide();
+        $('.loseInfo').hide();
+        console.log('Reset');
+        // client.emit('resetResult', { blobs });
+      }
+    }
+
     ctx.save();
 
     applyTransform(ctx, converter, evt.client.transform);
@@ -439,11 +447,11 @@ swip.init({ socket, container: $('.gameCanvas')[0], type: 'canvas' }, (client) =
       blobs[0].y = evt.client.transform.y + (evt.client.size.height / 2);
       blobs[0].speedX = 0;
       blobs[0].speedY = 0;
+      client.emit('updateBlobs', { blobs });
       LifeText.life -= 1;
       if (LifeText.life === 0) {
         client.emit('gameOver', { blobs });
       }
-      client.emit('updateBlobs', { blobs });
     }
     drawLife(ctx, evt.client, LifeText);
 

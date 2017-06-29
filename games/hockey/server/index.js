@@ -117,17 +117,6 @@ swip(io, {
           },
         };
       },
-      resetResult: ({ cluster, client }, { blobs }) => {
-        cluster.clients.forEach((cli) => {
-          cli.result = 'default';
-          return cli;
-        });
-        return {
-          cluster: {
-            data: { blobs: { $set: blobs } },
-          },
-        };
-      },
     },
   },
 });
