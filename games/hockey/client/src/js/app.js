@@ -9,14 +9,23 @@ let page = 0;
 
 $('.nextBtn').click(() => {
   if (page === 0) {
-    $('.gameInstructions').animate({ left: ['-100%', 'easeInOutQuad'] });
+    $('.gameInstructions').animate({ left: ['-100%', 'easeInOutQuad'] }, () => {
+      $('.leftFinger').show();
+      $('.rightFinger').show();
+    });
     $('.prevBtn').show();
     page += 1;
   } else if (page === 1) {
     $('.gameInstructions').animate({ left: ['-200%', 'easeInOutQuad'] }, () => {
+      $('.leftFinger').hide();
+      $('.rightFinger').hide();
       $('.thirdInstruction .rightScreen').animate({
         backgroundColor: ['rgba(173, 216, 230, 1)', 'easeInOutQuad'],
-      }, () => { $('.ball').fadeIn(); });
+      }, () => {
+        $('.ball').fadeIn();
+        $('.leftStriker').fadeIn();
+        $('.rightStriker').fadeIn();
+      });
     });
     $('.nextBtn').html('Start');
     page += 1;
@@ -29,13 +38,19 @@ $('.prevBtn').click(() => {
   if (page === 1) {
     $('.gameInstructions').animate({ left: ['0', 'easeInOutQuad'] });
     $('.prevBtn').hide();
+    $('.leftFinger').hide();
+    $('.rightFinger').hide();
     page -= 1;
-  } else {
+  } else if (page === 2) {
     $('.gameInstructions').animate({ left: ['-100%', 'easeInOutQuad'] }, () => {
       $('.thirdInstruction .rightScreen').css('backgroundColor', 'rgba(240, 128, 128, 1)');
       $('.ball').hide();
+      $('.leftStriker').hide();
+      $('.rightStriker').hide();
+      $('.nextBtn').html('Next');
+      $('.leftFinger').show();
+      $('.rightFinger').show();
     });
-    $('.nextBtn').html('Next');
     page -= 1;
   }
 });

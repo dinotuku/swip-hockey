@@ -5,7 +5,7 @@
     <title>Swip Hockey</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link href="https://fonts.googleapis.com/css?family=Lato:700|Merienda+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:700|Merienda+One" rel="stylesheet">
   </head>
 
   <body>
@@ -14,15 +14,16 @@
       <h1>Swip Hockey</h1>
       <div class="gameInstructions">
         <div class="firstInstruction">
+          <div class="instruction">Get two phones or tablets</div>
           <div class="leftSpace">
             <div class="leftScreen"></div>
           </div>
           <div class="rightSpace">
             <div class="rightScreen"></div>
           </div>
-          <div class="instruction">Get two phones</div>
         </div>
         <div class="secondInstruction">
+          <div class="instruction">Pinch / Swip the edges</div>
           <div class="leftSpace">
             <div class="leftScreen">
               <div class="leftFinger"></div>
@@ -33,12 +34,12 @@
               <div class="rightFinger"></div>
             </div>
           </div>
-          <div class="instruction">Pinch / Swip</div>
         </div>
         <div class="thirdInstruction">
+          <div class="instruction">Start playing</div>
           <div class="leftSpace">
             <div class="leftScreen">
-              <div class="striker">
+              <div class="leftStriker">
                 <div class="wrapper">
                   <div class="strikerHandle"></div>
                 </div>
@@ -47,9 +48,14 @@
             </div>
           </div>
           <div class="rightSpace">
-            <div class="rightScreen"></div>
+            <div class="rightScreen">
+              <div class="rightStriker">
+                <div class="wrapper">
+                  <div class="strikerHandle"></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="instruction">Start playing</div>
         </div>
       </div>
       <div class="controlBtn">
@@ -57,7 +63,7 @@
         <button class="nextBtn" type="button">Next</button>
       </div>
     </div>
-    <div class="gameInfo"></div>
+    <div class="gameInfo"></div>  
     <div class="gameCanvas"></div>
 
     <script src="/swip/swip.js"></script>
