@@ -4,11 +4,11 @@
   "description": "",
   "main": "src/server/index.js",
   "scripts": {
-    "start": "yarn run hockey",
+    "start": "node games/hockey/server/index.js",
     "test": "mocha",
-    "dev": "webpack --watch",
     "build": "webpack",
-    "hockey": "node games/hockey/server/index.js"
+    "build:watch": "webpack --watch",
+    "build:hockey": "cd games/hockey && npm run build:server && npm run build:client"
   },
   "license": "MIT",
   "dependencies": {

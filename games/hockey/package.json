@@ -4,6 +4,8 @@
   "description": "A multi screen hockey game.",
   "main": "index.js",
   "scripts": {
-    "start": "cd server && npm start"
+    "start": "cd server && npm start",
+    "build:client": "cd client && npm install && npm run build:prod",
+    "build:server": "cd server && npm install"
   }
 }

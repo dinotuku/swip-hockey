@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "A multi screen hockey game.",
   "scripts": {
-    "build": "webpack --env=dev",
-    "build:watch": "npm run build -- --watch",
-    "build:prod": "webpack --env=prod"
+    "build": "rm -rf build && webpack --env=dev",
+    "build:watch": "rm -rf build && npm run build -- --watch",
+    "build:prod": "rm -rf build && webpack --env=prod"
   },
   "dependencies": {
     "jquery": "^3.2.1",
@@ -22,6 +22,7 @@
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.6.0",
     "extract-text-webpack-plugin": "^2.1.2",
+    "favicons-webpack-plugin": "^0.0.7",
     "html-webpack-plugin": "^2.29.0",
     "style-loader": "^0.18.2",
     "webpack": "^3.0.0",
