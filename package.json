@@ -1,14 +1,15 @@
 {
-  "name": "swip",
+  "name": "swip-hockey",
   "version": "0.1.0",
   "description": "",
   "main": "src/server/index.js",
   "scripts": {
     "start": "node games/hockey/server/index.js",
     "test": "mocha",
-    "build": "webpack",
+    "build": "webpack && npm run build:hockey",
     "build:watch": "webpack --watch",
-    "build:hockey": "cd games/hockey && npm run build:server && npm run build:client"
+    "build:hockey": "cd games/hockey && npm run build:server && npm run build:client",
+    "deploy": "now"
   },
   "license": "MIT",
   "dependencies": {
@@ -31,9 +32,11 @@
     "eslint-config-airbnb-base": "^4.0.2",
     "eslint-plugin-import": "^1.11.1",
     "mocha": "^3.0.2",
+    "now": "^7.1.1",
     "should": "^10.0.0",
     "should-sinon": "0.0.5",
     "sinon": "^1.17.5",
-    "style-loader": "^0.13.1"
+    "style-loader": "^0.13.1",
+    "webpack": "^3.0.0"
   }
 }
