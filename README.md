@@ -13,12 +13,12 @@ Swip Hockey
 
 #### Get the source code  
 
-		git clone https://github.com/dtk0528/blog.git
-		cd swip-hockey
+	git clone https://github.com/dtk0528/blog.git
+	cd swip-hockey
 	
 #### Download and install all the dependencies
 
-		yarn install
+	yarn install
   
 ---
 	
@@ -26,19 +26,19 @@ Swip Hockey
 
 #### Build swip.js
 
-		yarn run build
+	yarn run build
 
 #### Build server and client
 
-		yarn run build:hockey
+	yarn run build:hockey
 
-#### Start the server (in server/)
+#### Start the server
 
-		yarn start
+	yarn start
 
 #### Open a browser and go to
 
-		localhost:3000
+	localhost:3000
 
 ---
 
