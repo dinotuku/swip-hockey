@@ -13,7 +13,7 @@ Swip Hockey
 
 #### Get the source code  
 
-	git clone https://github.com/dtk0528/blog.git
+	git clone https://github.com/dinotuku/blog.git
 	cd swip-hockey
 	
 #### Download and install all the dependencies
