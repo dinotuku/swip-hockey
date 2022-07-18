@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "jquery": "^3.2.1",
-    "jquery-ui": "^1.12.1",
+    "jquery-ui": "^1.13.2",
     "socket.io-client": "^2.0.3"
   },
   "devDependencies": {
